@@ -1,9 +1,9 @@
 const users = [
     {
-        id: 123455,
-        name: 'Zubair Ayaz Asim Chaudhry',
-        phone: '03204647247',
-        image: 'this is image',
+        id: 000000,
+        name: 'Dumy User',
+        phone: 'Dumy Phone',
+        image: 'Dumy image',
     },
 
 ];
