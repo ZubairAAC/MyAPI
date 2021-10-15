@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 let users = require('../../model/User');
 const uuid = require('uuid');
+const dbConfig = require('../../config/database.config')
+const MongoClient = require('mongodb').MongoClient
+const ObjectId = require('mongodb').ObjectID
 
 router.get('/', (req, res) => {
     res.json(users);
@@ -30,7 +33,18 @@ router.post('/', (req, res) => {
     if (!newUser.name || !newUser.phone || !newUser.image) {
         return res.send("can't add");
     }
-    users.push(newUser)
+
+    MongoClient.connect(dbConfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        if (err) return console.log(err)
+        let db = client.db('ZamindarMobileApp')
+        db.collection('users').insertOne(newUser, function (err, r) {
+            if (err) return console.log(err)
+            client.close()
+            res.send(r.ops)
+        })
+    });
+    users.push(newUser);
+
     // res.send("new user has been added");
     res.json(users);
 
