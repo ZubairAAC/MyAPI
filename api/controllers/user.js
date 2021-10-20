@@ -6,19 +6,45 @@ const dbConfig = require('../../config/database.config')
 const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
 const multer = require('multer');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
+const crypto = require('crypto');
+const path = require('path');
 
-//define storage for image
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'upload/image')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + 'Zamindar' + Date.now() + '.jpg')
+
+
+const conn = mongoose.createConnection(dbConfig.url);
+
+// Init gfs
+let gfs;
+
+conn.once('open', () => {
+    // Init stream
+    gfs = Grid(conn.db, mongoose.mongo);
+    gfs.collection('uploads');
+});
+
+// Create storage engine
+const storage = new GridFsStorage({
+    url: dbConfig.url,
+    file: (req, file) => {
+        return new Promise((resolve, reject) => {
+            crypto.randomBytes(16, (err, buf) => {
+                if (err) {
+                    return reject(err);
+                }
+                const filename = buf.toString('hex') + path.extname(file.originalname);
+                const fileInfo = {
+                    filename: filename,
+                    bucketName: 'uploads'
+                };
+                resolve(fileInfo);
+            });
+        });
     }
-})
-
-// upload peramters for multer
-const upload = multer({ storage: storage, limits: { fieldSize: 1024 * 1024 * 3 } })
+});
+const upload = multer({ storage });
 
 router.get('/', (req, res) => {
     // res.json(users);
