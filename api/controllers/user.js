@@ -5,6 +5,20 @@ const uuid = require('uuid');
 const dbConfig = require('../../config/database.config')
 const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
+const multer = require('multer');
+
+//define storage for image
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'upload/image')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + 'Zamindar' + Date.now() + '.jpg')
+    }
+})
+
+// upload peramters for multer
+const upload = multer({ storage: storage, limits: { fieldSize: 1024 * 1024 * 3 } })
 
 router.get('/', (req, res) => {
     // res.json(users);
@@ -29,12 +43,12 @@ router.get('/:id', (req, res) => {
     }
 })
 //post new user
-router.post('/', (req, res) => {
+router.post('/', upload.single('image'), (req, res) => {
     const newUser = {
         id: req.body.id,
         name: req.body.name,
         phone: req.body.phone,
-        image: req.body.image,
+        image: req.file.filename,
         gender: req.body.gender,
     }
 
