@@ -40,8 +40,10 @@ const storage = new GridFsStorage({
                     bucketName: 'uploads'
                 };
                 resolve(fileInfo);
-            });
-        });
+            })
+        }).catch(err => {
+            reject(err);
+        });;
     }
 });
 const upload = multer({ storage });
@@ -70,6 +72,7 @@ router.get('/:id', (req, res) => {
 })
 //post new user
 router.post('/', upload.single('image'), (req, res) => {
+    console.log(req.file)
     const newUser = {
         id: req.body.id,
         name: req.body.name,
