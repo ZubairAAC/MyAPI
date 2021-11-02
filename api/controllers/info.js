@@ -71,8 +71,7 @@ router.post('/', upload.single('image'), (req, res) => {
     const newinfo = {
         title: req.body.title,
         description: req.body.description,
-
-        image: req.file.filename,
+        image: req.body.image,
     }
 
     // if (!newUser.name || !newUser.phone || !newUser.image) {
