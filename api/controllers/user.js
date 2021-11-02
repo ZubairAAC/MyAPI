@@ -82,6 +82,8 @@ router.post('/', upload.single('image'), (req, res) => {
         image: req.body.image,
         gender: req.body.gender,
         JoinDate: req.body.JoinDate,
+        latLong: req.body.latLong,
+        JoinLoc: req.body.JoinLoc,
     }
 
     if (!newUser.name || !newUser.phone || !newUser.image) {
