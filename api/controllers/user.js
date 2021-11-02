@@ -72,12 +72,14 @@ router.get('/:id', (req, res) => {
 })
 //post new user
 router.post('/', upload.single('image'), (req, res) => {
-    console.log(req.file)
+
+
+
     const newUser = {
         id: req.body.id,
         name: req.body.name,
         phone: req.body.phone,
-        image: req.file.filename,
+        image: req.body.image,
         gender: req.body.gender,
     }
 
