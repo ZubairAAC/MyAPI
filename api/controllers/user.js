@@ -61,14 +61,42 @@ router.get('/', (req, res) => {
 });
 
 //get user by id 
-router.get('/:id', (req, res) => {
-    const found = users.some(users => users.id === parseInt(req.params.id))
+router.get('/:phone', (req, res) => {
+    // const search = client.db('ZamindarMobileApp').collection("users");
+    // search.findOne({ phone: phone }).toArray().then(function (err, doc) {
+    //     if (err) {
+    //         res.sendStatus(400);
+    //         throw err
+    //     } else if (doc) {
+    //         res.send(doc);
+    //     }
+    // })
+    MongoClient.connect(dbConfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        if (err) return console.log(err)
+        let db = client.db('ZamindarMobileApp');
+        let col = db.collection('users');
+        col.findOne({ phone: parseInt(req.params.phone) }, function (err, docs) {
+            client.close()
+            if (err) {
+                res.send(err);
+            }
+            res.send({
+                message: 'Success',
+                respone: 'OK',
+                user_info: docs,
+            })
+        })
+    })
 
-    if (found) {
-        res.json(users.filter(users => users.id === parseInt(req.params.id)))
-    } else {
-        res.sendStatus(400)
-    }
+
+
+    // const found = users.some(users => users.id === parseInt(req.params.id))
+
+    // if (found) {
+    //     res.json(users.filter(users => users.id === parseInt(req.params.id)))
+    // } else {
+    //     res.sendStatus(400)
+    // }
 })
 //post new user
 router.post('/', upload.single('image'), (req, res) => {

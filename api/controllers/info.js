@@ -68,10 +68,18 @@ router.get('/:id', (req, res) => {
 })
 //post new user
 router.post('/', upload.single('image'), (req, res) => {
+    const mysender = {
+        name: req.body.name,
+        profile: req.body.profile,
+        id: req.body.id,
+    };
     const newinfo = {
         title: req.body.title,
         description: req.body.description,
         image: req.body.image,
+        time: Date(),
+        type: req.body.type,
+        sender: mysender,
     }
 
     // if (!newUser.name || !newUser.phone || !newUser.image) {
