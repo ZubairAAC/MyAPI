@@ -10,6 +10,7 @@ app.use(bodyParser.json({ limit: '500mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '500mb' }));
 app.use('/user', require('./api/controllers/user'));
 app.use('/info', require('./api/controllers/info'));
+app.use('/ad', require('./api/controllers/ad'));
 app.listen(port, () => console.log('Server started on port 8000'));
 
 
