@@ -108,7 +108,7 @@ router.post('/', upload.single('image'), (req, res) => {
         description: req.body.description,
         city: req.body.city,
         imgLength: req.body.imgLength,
-        images: req.body.images.toArray,
+        images: req.body.images,
     }
 
     if (!newUser.title || !newUser.price || !newUser.category) {
